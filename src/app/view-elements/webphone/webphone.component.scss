@@ -1,16 +1,19 @@
+:host {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
 .webphone-container {
-  position: relative;
-  width: 100%;
-  height: 900px;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
+  width: fit-content;
+  height: 733px;
   overflow: hidden;
-  background: #fafafa;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-.webphone-container iframe {
-  width: 100%;
+#fc-webphone-iframe {
+  margin-top: -30px;
+  scale: 0.87;
   height: 100%;
-  border: none;
+  min-width: 414px;
+  border: 1px solid black;
+  border-radius: 10px;
 }

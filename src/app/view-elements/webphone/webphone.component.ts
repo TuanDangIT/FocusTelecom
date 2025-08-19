@@ -1,5 +1,4 @@
 import {
-  AfterViewChecked,
   AfterViewInit,
   Component,
   Input,
@@ -10,7 +9,6 @@ import {
 } from '@angular/core';
 import {
   CrtInput,
-  CrtInputRegistrationConfig,
   CrtOutput,
   CrtViewElement,
   HttpClientService,
@@ -31,7 +29,6 @@ import type {
   AdapterLoader,
 } from '@ftdev/webphone-sdk';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
 
 declare global {
   interface Window {
@@ -45,7 +42,6 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
   private webphoneComponent: WebphoneComponent;
   constructor(
     webphoneComponent: WebphoneComponent,
-    private httpClient: HttpClient,
     private httpClientService: HttpClientService
   ) {
     this.webphoneComponent = webphoneComponent;
@@ -60,6 +56,10 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
     },
     error: (message_code: string, message: string) => {
       console.error(`Error [${message_code}]: ${message}`);
+      this.webphoneComponent.errorOccurred.emit({
+        messageCode: message_code,
+        message,
+      });
     },
   };
 
@@ -160,16 +160,20 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
     //   });
     console.log('Base url', this.webphoneComponent.baseUrl);
     return this.httpClientService
-      .post<string>(
+      .post<{Data: string}>(
         `${this.webphoneComponent.baseUrl}/rest/FocusWebphoneService/calls`,
         payload,
         { responseType: 'json' }
       )
       .then((response) => {
-        return { id: response.body! };
+        return { id: response.body!.Data! };
       })
       .catch((error) => {
         console.error('UPSERT API error:', error);
+        this.webphoneComponent.errorOccurred.emit({
+          messageCode: 'UPSERT_API_ERROR',
+          message: `Error occurred while upserting call record: ${error}`
+        });
         throw new Error(`UPSERT API error: ${error}`);
       });
   };
@@ -202,6 +206,10 @@ export class WebphoneComponent implements AfterViewInit, OnDestroy, OnInit {
 
   public readonly httpClientService = new HttpClientService();
   private initiationTimemoutId: any;
+
+  @Output()
+  @CrtOutput()
+  errorOccurred = new EventEmitter<{ messageCode: string; message: string }>();
 
   @Output()
   @CrtOutput()
@@ -298,11 +306,7 @@ export class WebphoneComponent implements AfterViewInit, OnDestroy, OnInit {
         container: '#fc-webphone-iframe',
         userId: this.userId,
         mode: this.mode,
-        adapter: new AngularWebphoneAdapter(
-          this,
-          this.httpClient,
-          this.httpClientService
-        ),
+        adapter: new AngularWebphoneAdapter(this, this.httpClientService),
         authData: {
           domain: this.domain,
           token: this.token,
