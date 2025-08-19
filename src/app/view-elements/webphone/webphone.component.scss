@@ -1,0 +1,16 @@
+.webphone-container {
+  position: relative;
+  width: 100%;
+  height: 900px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fafafa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.webphone-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}

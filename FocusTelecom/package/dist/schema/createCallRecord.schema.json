@@ -1,0 +1,42 @@
+{
+  "$ref": "#/definitions/CallRecordData",
+  "definitions": {
+    "CallRecordData": {
+      "description": "Create call record representing call in your system.",
+      "type": "object",
+      "properties": {
+        "callId": {
+          "description": "Call Id.",
+          "type": "number"
+        },
+        "phoneNumber": {
+          "description": "Phone number.",
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9]*$"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\+[0-9]*$"
+            }
+          ]
+        },
+        "direction": {
+          "description": "Call direction from CallCenter perspective.",
+          "enum": [
+            "inbound",
+            "outbound"
+          ],
+          "type": "string"
+        },
+        "subject": {
+          "description": "Call record subject ex. Inbound Call (Answered) from: +48XXXXXXX.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://webphone-connector.fcc-online.pl/src/schema/createCallRecord.schema.json"
+}

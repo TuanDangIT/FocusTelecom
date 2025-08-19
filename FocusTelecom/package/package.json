@@ -1,0 +1,67 @@
+{
+  "name": "@ftdev/webphone-sdk",
+  "version": "1.0.13",
+  "type": "module",
+  "author": "Sergiusz Morga",
+  "repository": "https://git.dev.systemycallcenter.pl/ftdev/webphone-sdk",
+  "main": "dist/index.cjs",
+  "types": "dist/types/index.d.ts",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "npm run build:sdk && npm run build:cli && npm run generate-schema",
+    "build:sdk": "tsc && npm test && vite build",
+    "build:cli": "tsc && vite build --config vite.config.cli.ts",
+    "test": "jest",
+    "typecheck": "tsc --noEmit",
+    "generate-schema": "tsx scripts/schemaGenerator.ts",
+    "prepublishOnly": "npm run build",
+    "prepare": "husky"
+  },
+  "bin": {
+    "webphone-sdk-cli": "./dist/bin/cli.cjs"
+  },
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.cjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "dotenv": "^16.3.1",
+    "glob": "^8.1.0",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-junit": "^16.0.0",
+    "jest-transform-stub": "^2.0.0",
+    "lodash": "^4.17.21",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "typescript-json-schema": "^0.65.1",
+    "vite": "^5.1.4",
+    "vite-plugin-dts": "^4.5.3"
+  },
+  "dependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/jest": "^29.5.14",
+    "@types/lodash": "^4.17.16",
+    "@types/node": "^20.11.19",
+    "@types/post-robot": "^10.0.6",
+    "@types/semver": "^7.7.0",
+    "ajv": "^8.12.0",
+    "ajv-cli": "^5.0.0",
+    "ajv-keywords": "^5.1.0",
+    "commander": "^13.1.0",
+    "fs-extra": "^11.3.0",
+    "post-robot": "^10.0.46",
+    "semver": "^7.7.1"
+  }
+}

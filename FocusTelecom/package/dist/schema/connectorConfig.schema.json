@@ -1,0 +1,65 @@
+{
+  "$ref": "#/definitions/WebphoneConnectorConfig",
+  "definitions": {
+    "WebphoneConnectorConfig": {
+      "description": "Structure of Webphone Connector Configuration",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "Integration type supported by FCC backend. Contact CC for get integration name.",
+          "type": "string"
+        },
+        "container": {
+          "description": "Selector for html object, phone iframe will be placed in it. If object is iframe, ensure it's not visible by default `style=\"visibility:hidden\"`.",
+          "type": "string"
+        },
+        "userId": {
+          "description": "Current logged in user Id in your system.",
+          "type": "string"
+        },
+        "mode": {
+          "description": "Connector mode.",
+          "enum": [
+            "dev",
+            "prod"
+          ],
+          "type": "string"
+        },
+        "adapter": {
+          "$ref": "webphoneAdapter.schema.json",
+          "description": "Webphone adapter in your system."
+        },
+        "authData": {
+          "$ref": "#/definitions/AuthData",
+          "description": "Authorization Data for current user."
+        }
+      },
+      "required": [
+        "adapter",
+        "authData",
+        "container",
+        "type",
+        "userId"
+      ]
+    },
+    "AuthData": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "description": "Fcc tenant domain.",
+          "type": "string"
+        },
+        "token": {
+          "description": "Token retrived from external-api for authorizating connector instance.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain",
+        "token"
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://webphone-connector.fcc-online.pl/src/schema/connectorConfig.schema.json"
+}

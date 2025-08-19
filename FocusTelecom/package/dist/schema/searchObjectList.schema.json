@@ -1,0 +1,82 @@
+{
+  "$ref": "#/definitions/SearchObjectList",
+  "definitions": {
+    "SearchObjectList": {
+      "description": "Structure describing given object from your system. Used to retrive data for ended and active calls.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "System ID of object.",
+          "type": "string"
+        },
+        "vid": {
+          "description": "Object ID for external systems.",
+          "type": "string"
+        },
+        "ownerId": {
+          "description": "Object owner id.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Entity type.",
+          "type": "string"
+        },
+        "phone": {
+          "$ref": "#/definitions/PhoneNumber",
+          "description": "Phone number"
+        },
+        "email": {
+          "description": "Email",
+          "type": "string",
+          "pattern": "^.*@.*\\\\\\..*$"
+        },
+        "displayName": {
+          "description": "Name in format for displaying in phone.",
+          "type": "string"
+        },
+        "profileUrl": {
+          "description": "Absolute url to object.",
+          "type": "string"
+        },
+        "company": {
+          "description": "Company name.",
+          "type": "string"
+        },
+        "firstname": {
+          "description": "Firstname.",
+          "type": "string"
+        },
+        "lastname": {
+          "description": "LastName.",
+          "type": "string"
+        },
+        "portalId": {
+          "description": "Object id for accessing using URI's, null otherwise.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "displayName",
+        "id",
+        "ownerId",
+        "phone",
+        "type",
+        "vid"
+      ]
+    },
+    "PhoneNumber": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9]*$"
+        },
+        {
+          "type": "string",
+          "pattern": "^\\+[0-9]*$"
+        }
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://webphone-connector.fcc-online.pl/src/schema/searchObjectList.schema.json"
+}

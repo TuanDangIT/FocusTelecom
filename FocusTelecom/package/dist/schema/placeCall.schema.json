@@ -1,0 +1,42 @@
+{
+  "$ref": "#/definitions/PlaceCall",
+  "definitions": {
+    "PlaceCall": {
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "$ref": "#/definitions/PhoneNumber"
+        },
+        "vid": {
+          "description": "ID of object that we will call.",
+          "type": "string"
+        },
+        "ticket": {
+          "description": "Thing releated to called vid",
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      },
+      "required": [
+        "phoneNumber",
+        "vid"
+      ]
+    },
+    "PhoneNumber": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9]*$"
+        },
+        {
+          "type": "string",
+          "pattern": "^\\+[0-9]*$"
+        }
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://webphone-connector.fcc-online.pl/src/schema/placeCall.schema.json"
+}

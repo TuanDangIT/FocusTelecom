@@ -1,0 +1,80 @@
+{
+  "$ref": "#/definitions/WebphoneAdapter",
+  "definitions": {
+    "WebphoneAdapter": {
+      "description": "Structure of Webphone Adapter",
+      "type": "object",
+      "properties": {
+        "loader": {
+          "$ref": "#/definitions/AdapterLoader"
+        },
+        "createEntityHandler": {
+          "typeof": "function"
+        },
+        "onToggleClick2Dial": {
+          "typeof": "function"
+        },
+        "onUserStatusChanged": {
+          "typeof": "function"
+        },
+        "getCallObject": {
+          "typeof": "function"
+        },
+        "getUserStatus": {
+          "typeof": "function"
+        },
+        "linkToCurrentHandler": {
+          "typeof": "function"
+        },
+        "supportMatrixHandler": {
+          "typeof": "function"
+        },
+        "searchHandler": {
+          "typeof": "function"
+        },
+        "popSoftphoneHandler": {
+          "typeof": "function"
+        },
+        "navigateToObjectHandler": {
+          "typeof": "function"
+        },
+        "upsertCallRecordHandler": {
+          "typeof": "function"
+        },
+        "iconHandler": {
+          "typeof": "function"
+        }
+      },
+      "required": [
+        "createEntityHandler",
+        "getCallObject",
+        "iconHandler",
+        "loader",
+        "onToggleClick2Dial",
+        "supportMatrixHandler",
+        "upsertCallRecordHandler"
+      ]
+    },
+    "AdapterLoader": {
+      "type": "object",
+      "properties": {
+        "prompt": {
+          "typeof": "function"
+        },
+        "finish": {
+          "typeof": "function"
+        },
+        "error": {
+          "typeof": "function"
+        }
+      },
+      "required": [
+        "error",
+        "finish",
+        "prompt"
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://webphone-connector.fcc-online.pl/src/schema/webphoneAdapter.schema.json"
+}

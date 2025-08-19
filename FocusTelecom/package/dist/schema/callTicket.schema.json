@@ -1,0 +1,24 @@
+{
+  "$ref": "#/definitions/CallTicket",
+  "definitions": {
+    "CallTicket": {
+      "type": "object",
+      "properties": {
+        "ticketNumber": {
+          "description": "Thing number that is used in CRM for display entity.",
+          "type": "string"
+        },
+        "ticketId": {
+          "description": "Thing Id in crm system.",
+          "type": "string"
+        },
+        "subject": {
+          "description": "Thing subject/topic a brief description.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://webphone-connector.fcc-online.pl/src/schema/callTicket.schema.json"
+}

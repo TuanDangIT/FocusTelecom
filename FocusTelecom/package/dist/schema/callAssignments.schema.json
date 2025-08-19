@@ -1,0 +1,25 @@
+{
+  "$ref": "#/definitions/CallAssignments",
+  "definitions": {
+    "CallAssignments": {
+      "description": "Structure describies payload used to change call assignments in FCC.",
+      "type": "object",
+      "properties": {
+        "recordId": {
+          "description": "Identifier of the object representing the company associated with the call.",
+          "type": "string"
+        },
+        "recordType": {
+          "description": "Identifier of the object representing the individual associated with the call.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "recordId",
+        "recordType"
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://webphone-connector.fcc-online.pl/src/schema/callAssignments.schema.json"
+}
