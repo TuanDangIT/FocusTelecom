@@ -12,6 +12,7 @@ import {
   CrtOutput,
   CrtViewElement,
   HttpClientService,
+  MessageChannelService,
 } from '@creatio-devkit/common';
 import { EventEmitter } from '@angular/core';
 import type {
@@ -117,8 +118,33 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
     data: CallRecordData
   ): Promise<UpsertCallRecordResult> => {
     console.log('upsertCallRecordHandler', data);
-    console.log('Emitting call answered event with data:', data);
-    this.webphoneComponent.callAnswered.emit(data);
+    console.log(
+      'Show contact page for incoming call in adapter:',
+      this.webphoneComponent.showContactPageForIncomingCall
+    );
+    console.log(
+      'Show contact page for outgoing call in adapter:',
+      this.webphoneComponent.showContactPageForOutgoingCall
+    );
+    if (
+      (data.direction === 'inbound' &&
+        this.webphoneComponent.showContactPageForIncomingCall) ||
+      (data.direction === 'outbound' &&
+        this.webphoneComponent.showContactPageForOutgoingCall)
+    ) {
+      console.log(
+        'Show contact page for incoming call inside if in adapter:',
+        this.webphoneComponent.showContactPageForIncomingCall
+      );
+      console.log(
+        'Show contact page for outgoing call inside if in adapter:',
+        this.webphoneComponent.showContactPageForOutgoingCall
+      );
+      console.log('Emitting call answered event with data:', data.phoneNumber!);
+      this.webphoneComponent.callAnswered.emit({
+        phoneNumber: data.phoneNumber!,
+      });
+    }
     // if (event.data.includes('__post_robot')) {
     //   console.log('Received data that has post_robot:', event);
     //   const parsedData = JSON.parse(event.data);
@@ -160,7 +186,7 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
     //   });
     console.log('Base url', this.webphoneComponent.baseUrl);
     return this.httpClientService
-      .post<{Data: string}>(
+      .post<{ Data: string }>(
         `${this.webphoneComponent.baseUrl}/rest/FocusWebphoneService/calls`,
         payload,
         { responseType: 'json' }
@@ -172,7 +198,7 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
         console.error('UPSERT API error:', error);
         this.webphoneComponent.errorOccurred.emit({
           messageCode: 'UPSERT_API_ERROR',
-          message: `Error occurred while upserting call record: ${error}`
+          message: `Error occurred while upserting call record: ${error}`,
         });
         throw new Error(`UPSERT API error: ${error}`);
       });
@@ -200,7 +226,10 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
   type: 'dbx.Webphone',
 })
 export class WebphoneComponent implements AfterViewInit, OnDestroy, OnInit {
+  private creatioChannel: BroadcastChannel;
   constructor(public httpClient: HttpClient) {
+    this.creatioChannel = new BroadcastChannel('webphone');
+    console.log('Broadcast channel created', this.creatioChannel);
     console.log('WebphoneComponent constructor called', httpClient);
   }
 
@@ -217,7 +246,15 @@ export class WebphoneComponent implements AfterViewInit, OnDestroy, OnInit {
 
   @Output()
   @CrtOutput()
-  callAnswered = new EventEmitter<CallRecordData>();
+  callAnswered = new EventEmitter<{ phoneNumber: string }>();
+
+  @Input()
+  @CrtInput()
+  showContactPageForIncomingCall: boolean = true;
+
+  @Input()
+  @CrtInput()
+  showContactPageForOutgoingCall: boolean = true;
 
   @Input()
   @CrtInput()
@@ -302,6 +339,7 @@ export class WebphoneComponent implements AfterViewInit, OnDestroy, OnInit {
       window.WebphoneConnectorSDK?.WebphoneConnector ||
       window.WebphoneConnectorSdkExports;
     this.initiationTimemoutId = setTimeout(() => {
+      console.log('Initializing Webphone');
       const config: WebphoneConnectorConfig = {
         container: '#fc-webphone-iframe',
         userId: this.userId,
@@ -317,7 +355,32 @@ export class WebphoneComponent implements AfterViewInit, OnDestroy, OnInit {
       this.webphone = new connector(config, window);
       console.log('booting');
       this.webphone.boot();
+      console.log(
+        'Show contact page for incoming call:',
+        this.showContactPageForIncomingCall
+      );
+      console.log(
+        'Show contact page for outgoing call:',
+        this.showContactPageForOutgoingCall
+      );
     }, 1);
+    console.log('Channel on Angular', this.creatioChannel);
+    this.creatioChannel.onmessage = (event) => {
+      console.log('Received message from creatioChannel:', event);
+      if (event.data.type === 'MAKE_CALL') {
+        console.log(
+          'Making call with phone number:',
+          event.data.data.phoneNumber
+        );
+        this.webphone?.placeCall({
+          phoneNumber: event.data.data.phoneNumber,
+          vid: '',
+        });
+      }
+    };
+    this.creatioChannel.onmessageerror = (event) => {
+      console.error('Error occurred in creatioChannel:', event);
+    };
   }
 
   ngOnDestroy(): void {
