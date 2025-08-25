@@ -28,6 +28,8 @@ import type {
   CreateEntity,
   CallObjectDetails,
   AdapterLoader,
+  PhoneNumber,
+  Email,
 } from '@ftdev/webphone-sdk';
 import { HttpClient } from '@angular/common/http';
 
@@ -100,6 +102,7 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
     console.log('searchHandler', term);
     console.log('Emitting ringing started event.');
     this.webphoneComponent.ringingStarted.emit();
+
     return Promise.resolve([]);
   };
 
@@ -186,12 +189,15 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
     //   });
     console.log('Base url', this.webphoneComponent.baseUrl);
     return this.httpClientService
-      .post<{ Data: string }>(
+      .post<{ Success: string; Data: string }>(
         `${this.webphoneComponent.baseUrl}/rest/FocusWebphoneService/calls`,
         payload,
         { responseType: 'json' }
       )
       .then((response) => {
+        if (response.body?.Success === 'false') {
+          throw new Error(`UPSERT API error: ${response.body?.Data}`);
+        }
         return { id: response.body!.Data! };
       })
       .catch((error) => {
@@ -372,10 +378,13 @@ export class WebphoneComponent implements AfterViewInit, OnDestroy, OnInit {
           'Making call with phone number:',
           event.data.data.phoneNumber
         );
-        this.webphone?.placeCall({
+        const phoneCallConfig = {
           phoneNumber: event.data.data.phoneNumber,
           vid: '',
-        });
+        };
+
+        console.log('Phone call config:', phoneCallConfig);
+        this.webphone?.placeCall(phoneCallConfig);
       }
     };
     this.creatioChannel.onmessageerror = (event) => {
