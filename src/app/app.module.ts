@@ -4,6 +4,7 @@ import { bootstrapCrtModule, CrtModule } from '@creatio-devkit/common';
 import { WebphoneComponent } from './view-elements/webphone/webphone.component';
 import { createCustomElement } from '@angular/elements';
 import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @CrtModule({
   /* Specify that InputComponent is a view element. */
@@ -11,7 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 })
 @NgModule({
   declarations: [WebphoneComponent],
-  imports: [BrowserModule, HttpClientModule],
+  imports: [BrowserModule, HttpClientModule, CommonModule],
   providers: [],
 })
 export class AppModule implements DoBootstrap {

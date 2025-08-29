@@ -49,7 +49,7 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
   ) {
     this.webphoneComponent = webphoneComponent;
   }
-  // TODO: Add actions 1d.
+
   loader: AdapterLoader = {
     prompt: (message: string) => {
       console.log(`Prompt: ${message}`);
@@ -66,7 +66,6 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
     },
   };
 
-  // TODO: create a Activity record(by API) 4h.
   createEntityHandler = (p: CreateEntity): Promise<void> => {
     console.log('createEntityHandler', p);
     return Promise.resolve();
@@ -80,7 +79,6 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
     return Promise.resolve();
   };
 
-  // TODO: create a Call record(by API) 4h.
   getCallObject = (id: string): Promise<CallObjectDetails> => {
     console.log('getCallObject', id);
     return Promise.resolve({});
@@ -91,13 +89,11 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
     return Promise.resolve();
   };
 
-  // TODO: set the matrix settings 4h.
   supportMatrixHandler = (): Promise<SupportMatrixResponse> => {
     console.log('supportMatrixHandler');
     return Promise.resolve({});
   };
 
-  // TODO: add search Contact by phone number 4h.
   searchHandler = (term: SearchTerm): Promise<SearchObjectList[]> => {
     console.log('searchHandler', term);
     console.log('Emitting ringing started event.');
@@ -116,7 +112,6 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
     return Promise.resolve();
   };
 
-  // TODO: update a Call record(by API) 4h.
   upsertCallRecordHandler = (
     data: CallRecordData
   ): Promise<UpsertCallRecordResult> => {
@@ -148,24 +143,6 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
         phoneNumber: data.phoneNumber!,
       });
     }
-    // if (event.data.includes('__post_robot')) {
-    //   console.log('Received data that has post_robot:', event);
-    //   const parsedData = JSON.parse(event.data);
-    //   const callData = parsedData.__post_robot_10_0_46__[0].data.data;
-    //   if (callData.callId && callData.phoneNumber) {
-    //     this.callAnswered.emit({
-    //       callId: callData.callId,
-    //       phoneNumber: callData.phoneNumber,
-    //       direction: callData.direction,
-    //     });
-
-    //     console.log('Call answered:', {
-    //       callId: callData.callId,
-    //       phoneNumber: callData.phoneNumber,
-    //       direction: callData.direction,
-    //     });
-    //   }
-    // }
 
     const payload = {
       PhoneNumber: data.phoneNumber,
@@ -174,19 +151,6 @@ class AngularWebphoneAdapter implements WebphoneAdapter {
       Subject: data.subject,
     };
     console.log('Calling API', payload);
-    // return firstValueFrom(
-    //   this.httpClient.post(
-    //     'http://localhost/Creatio/0/rest/FocusWebphoneService/calls',
-    //     payload
-    //   )
-    // )
-    //   .then((response) => {
-    //     console.log('UPSERT API upsert response:', response);
-    //     return { id: response!.toString() };
-    //   })
-    //   .catch((error) => {
-    //     throw new Error(`UPSERT API error: ${error}`);
-    //   });
     console.log('Base url', this.webphoneComponent.baseUrl);
     return this.httpClientService
       .post<{ Success: string; Data: string }>(
@@ -264,80 +228,32 @@ export class WebphoneComponent implements AfterViewInit, OnDestroy, OnInit {
 
   @Input()
   @CrtInput()
-  baseUrl: string = 'http://localhost/Creatio/0';
+  baseUrl: string = '';
 
   @Input()
   @CrtInput()
-  token: string =
-    'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvNGUud2VseW8ucGwiLCJhdWQiOiJodHRwczpcL1wvNGUud2VseW8ucGwiLCJpYXQiOjE3NTQzMDQ3OTAsIm5iZiI6MTc1NDMwNDc5MCwiZXhwIjoxNzU2ODk2NzkwLCJjdXN0b21lcklkIjo2NDA4OTEsInVzZXJJZCI6MzYyMTUsInNlc3Npb25JZCI6IlF0R0p4NlFjNHl5SGR4MWExRkRMeFVTQlk0MTJzWUYwTnFoMG1ZM3E4dnB6SHJ2YU8yZHVtRmRZVFBod0YzczhIMWtoQ3RwZjc3azBiS1IyZENhTmxnbW11RlliSmhZUnA3LGs1U3YzbjBmcUlTaWJvcGNaMVhjTkpYOGFZNXVxIiwibW9kZSI6ImlwdCIsInR5cGUiOiJ3ZWJwaG9uZSIsImZ1bGxOYW1lIjoiUEJYIn0.FDsssqgkbnwWL-IFAMfa0z5w63tB0p1r1Aw_cQwhqIoHGj4W8ht-pJ9Tom5_PpCzE7NWFBzsJS3InGpUsxUbrx8PnYeA7JdzhvVGhU4cg9hRvV_tXHtePpL1scLzuAAWAhTwJdEiehq_JO_TzgLjen1YdWiyvGxPkLEqJ4dcHl-Bx77vDsIAyTA87B188LDAPBRoSfn52Eon3WmV0PO0n2Q5R0NpNAnYzTru0lDAuyIGbzJxqbkRr3_NUTjrHUVKfD4ieV1EHvi8RYQlT1TApNnUdc3URIw_y-Y3EQnAkKW56mBw10mZKf4Bh8ET0vf8cl4aI5MeTzfy55W_AqJlKTpjfQal515ZY-oEW_sNqGnmTGwW5dBCwhPfwPabMP7rNhnRonFRI26sLZbbsfhz6p1Xw2yCLBUoGD4RVnXjwklb5_TWcZxnBzlUVbXUz5RhuMg_Uq3ywgQAhqr8J9XfKgtqRAaFO8m_LJj7r2PQbSozxaQMD8-LU-5fvue5gPS9_C7BDHhlMpbXMlArJ2DdPrgZGBcLl41OSvInnEVYSVD7b2tr5fKfkBpnD4D1xIQMvshHYRqEJVHsCFC65DViQYRVA4TLrWMilsIsQDWTJT6TaL0L9_yHBpv0ZcoSox92zwmy_o7MfnLjEssdRsUrOZsWD3v2xLxUYZJDjRvuq5E';
+  token: string = '';
 
   @Input()
   @CrtInput()
-  userId: string = 'PBX';
+  userId: string = '';
 
   @Input()
   @CrtInput()
-  domain: string = 'demo-deloiite-creatio';
+  domain: string = '';
 
   @Input()
   @CrtInput()
   mode: 'dev' | 'prod' = 'prod';
 
+  @Input()
+  @CrtInput()
+  disableOrNotSetupParameters: boolean = false;
+
   private webphone: any;
 
-  ngOnInit(): void {
-    // console.log('Setting up event listeners');
-    // window.addEventListener('message', (event) => {
-    //   console.log('Received message:');
-    //   if (
-    //     event.data.action === 'phoneStatusChanged' &&
-    //     event.data.data.status === 'ringing'
-    //   ) {
-    //     console.log('Call received:', event);
-    //     this.callReceived.emit(true);
-    //   }
-    //   if (event.data.includes('__post_robot')) {
-    //     console.log('Received data that has post_robot:', event);
-    //     const parsedData = JSON.parse(event.data);
-    //     const callData = parsedData.__post_robot_10_0_46__[0].data.data;
-    //     if (callData.callId && callData.phoneNumber) {
-    //       this.callAnswered.emit({
-    //         callId: callData.callId,
-    //         phoneNumber: callData.phoneNumber,
-    //         direction: callData.direction,
-    //       });
-    //       console.log('Call answered:', {
-    //         callId: callData.callId,
-    //         phoneNumber: callData.phoneNumber,
-    //         direction: callData.direction,
-    //       });
-    //     }
-    //   }
-    // });
-  }
+  ngOnInit(): void {}
 
-  // async ngOnInit(): Promise<void> {
-  //       const connector =
-  //     (await window.WebphoneConnectorSDK) ||
-  //     window.WebphoneConnector ||
-  //     window.WebphoneConnectorSDK?.WebphoneConnector;
-  //   setTimeout(() => {
-  //     const config = {
-  //       container: '#fc-webphone-iframe',
-  //       userId: this.userId,
-  //       mode: this.mode,
-  //       adapter: new AngularWebphoneAdapter(),
-  //       authData: {
-  //         domain: this.domain,
-  //         token: this.token,
-  //       },
-  //       type: 'creatio',
-  //     };
-  //     this.webphone = new connector(config, window);
-  //     console.log('booting');
-  //     this.webphone.boot();
-  //   }, 1);
-  // }
   async ngAfterViewInit() {
     const connector =
       (await window.WebphoneConnectorSDK) ||
@@ -345,30 +261,36 @@ export class WebphoneComponent implements AfterViewInit, OnDestroy, OnInit {
       window.WebphoneConnectorSDK?.WebphoneConnector ||
       window.WebphoneConnectorSdkExports;
     this.initiationTimemoutId = setTimeout(() => {
-      console.log('Initializing Webphone');
-      const config: WebphoneConnectorConfig = {
-        container: '#fc-webphone-iframe',
-        userId: this.userId,
-        mode: this.mode,
-        adapter: new AngularWebphoneAdapter(this, this.httpClientService),
-        authData: {
-          domain: this.domain,
-          token: this.token,
-        },
-        type: 'd365',
-      };
-      console.log('Webphone config', config);
-      this.webphone = new connector(config, window);
-      console.log('booting');
-      this.webphone.boot();
       console.log(
-        'Show contact page for incoming call:',
-        this.showContactPageForIncomingCall
+        'Disabling or not setting up parameters',
+        this.disableOrNotSetupParameters
       );
-      console.log(
-        'Show contact page for outgoing call:',
-        this.showContactPageForOutgoingCall
-      );
+      if (!this.disableOrNotSetupParameters) {
+        console.log('Initializing Webphone');
+        const config: WebphoneConnectorConfig = {
+          container: '#fc-webphone-iframe',
+          userId: this.userId,
+          mode: this.mode,
+          adapter: new AngularWebphoneAdapter(this, this.httpClientService),
+          authData: {
+            domain: this.domain,
+            token: this.token,
+          },
+          type: 'd365',
+        };
+        console.log('Webphone config', config);
+        this.webphone = new connector(config, window);
+        console.log('booting');
+        this.webphone.boot();
+        console.log(
+          'Show contact page for incoming call:',
+          this.showContactPageForIncomingCall
+        );
+        console.log(
+          'Show contact page for outgoing call:',
+          this.showContactPageForOutgoingCall
+        );
+      }
     }, 1);
     console.log('Channel on Angular', this.creatioChannel);
     this.creatioChannel.onmessage = (event) => {
